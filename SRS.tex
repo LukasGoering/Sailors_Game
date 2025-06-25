@@ -1,0 +1,185 @@
+\documentclass[11.5pt, oneside]{scrartcl}
+
+
+%%% Packages
+	% Symbols
+		\usepackage[utf8]{inputenc}
+	% Sprache
+		\usepackage[ngerman]{babel}
+	% Colors
+		\usepackage[dvipsnames]{xcolor}
+	% Font
+		\usepackage[T1]{fontenc}
+	% Images
+		\usepackage{graphicx}
+		\graphicspath{ {./Images/} }
+		\setlength{\parindent}{0pt}
+	% Enumerate environment
+		\usepackage{enumitem}
+	% Mehrspaltige Umgebungen
+		\usepackage{multicol, float}
+	% Global Comment Environments, e.g. for Images
+		\usepackage{comment}
+	% Math
+		\usepackage{amsmath, amssymb}
+	% Display programming code
+		\usepackage{listings}
+	% Hyperlinks (should be the last package to be included)
+		\usepackage{hyperref}
+
+%%% Layout
+	\usepackage{geometry}
+	\geometry{	top=2cm,
+		bottom=1.5cm,
+		left=3.5cm,
+		includeheadfoot}
+		
+	
+%%% Header & Footer %%%
+	\usepackage[]{fancyhdr}
+	
+	\pagestyle{fancy}
+	\fancyhead[L]{Bewerbungstexte}
+	\fancyfoot{}
+	
+	
+%%% Listings-Setup for HTML %%%
+	\lstset{
+		language=HTML,
+		basicstyle=\ttfamily\small,
+		backgroundcolor=\color{gray!10},
+		frame=single,
+		breaklines=true,
+		postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+		showstringspaces=false
+		numbers=left % for line numbers
+		keywordstyle=\color{blue}%  to color HTML tags
+		columns=fullflexible %to fix spacing issues
+	}
+	
+	
+%%% Titlepage %%%
+	\title{Software Requirements Specification (SRS)\\\large Logic Puzzle Game}
+	\author{Lukas Goering}
+	\date{\today}
+	
+
+\begin{document}
+	
+	\maketitle
+	
+	\section{Introduction}
+	
+	\subsection{Purpose}
+	This document specifies the functional and non-functional requirements for a 2D logic puzzle game to be implemented using Java and JavaFX. The game involves two overlapping 3x3 grids—each filled with stones of different colors—and a central overlapping field that starts empty. The user manipulates stones under defined rules to achieve a winning configuration.
+	
+	\subsection{Scope}
+	The software is a desktop-based, single-player game application. The user interacts with the system through mouse and/or keyboard input to move stones across a graphical interface. The system visually displays the state of the game board, tracks moves, and determines the win condition. It does not require any network features.
+	
+	\subsection{Definitions}
+	\begin{itemize}[noitemsep]
+		\item \textbf{Board A}: A 3x3 grid initialized with white stones.
+		\item \textbf{Board B}: A 3x3 grid initialized with black stones.
+		\item \textbf{Overlap Square}: The central square shared by both boards, initially empty.
+		\item \textbf{Stone}: A movable piece, either white or black, that occupies a square on a grid.
+	\end{itemize}
+	
+	\section{Overall Description}
+	
+	\subsection{Product Perspective}
+	This is a standalone Java desktop application developed with JavaFX. The interface renders custom 2D graphics using the JavaFX Canvas API and standard UI controls for user feedback. The application includes a game loop that handles input, rendering, and logic processing.
+	
+	\subsection{Product Functions}
+	\begin{itemize}[noitemsep]
+		\item Initialize two 3x3 overlapping grids.
+		\item Display black and white stones on their respective grids.
+		\item Allow the user to move stones according to game rules.
+		\item Detect and announce when the win condition is met.
+		\item Track and display the number of moves made.
+	\end{itemize}
+	
+	\subsection{User Characteristics}
+	Users are expected to be casual desktop users with basic mouse/keyboard experience. No prior knowledge of the game's internal rules is assumed.
+	
+	\subsection{Constraints}
+	\begin{itemize}[noitemsep]
+		\item Java 11 or later with JavaFX support is required.
+		\item The application must support Windows and Linux platforms.
+		\item The game must run as a self-contained executable (JAR or packaged distribution).
+	\end{itemize}
+	
+	\section{Functional Requirements}
+	
+	\subsection{Board Initialization}
+	\begin{enumerate}[label=\textbf{FR\arabic*}, labelwidth=3em, labelsep=0.5em, leftmargin=4em, align=left, start=1]
+		\itemsep0pt
+		\item Create and render two overlapping 3x3 grids at launch.
+		\item Fill Board A with white stones.
+		\item Fill Board B with black stones.
+		\item Leave the overlapping square empty.
+	\end{enumerate}
+	
+	\subsection{Stone Movement Rules}
+	\begin{enumerate}[label=\textbf{FR\arabic*}, labelwidth=3em, labelsep=0.5em, leftmargin=4em, align=left, start=5]
+		\itemsep0pt
+		\item Allow a stone to move into a horizontally or vertically adjacent field if that field is empty.
+		\item Allow a stone to jump over one adjacent stone (vertically or horizontally) into an empty field, provided both the adjacent and the next field are in line and not diagonal.
+		\item Prevent diagonal moves and invalid jumps.
+		\item Update the game board and internal state after each valid move.
+		\item Ignore or optionally notify the player of invalid moves.
+	\end{enumerate}
+	
+	\subsection{Win Condition}
+	\begin{enumerate}[label=\textbf{FR\arabic*}, labelwidth=3em, labelsep=0.5em, leftmargin=4em, align=left, start=10]
+		\itemsep0pt
+		\item After each move, check if all white stones occupy the initial positions of the black stones, and all black stones occupy the initial positions of the white stones.
+		\item When this condition is met, display a "You Win" message and show the total number of moves made.
+	\end{enumerate}
+	
+	\subsection{Move Counter}
+	\begin{enumerate}[label=\textbf{FR\arabic*}, labelwidth=3em, labelsep=0.5em, leftmargin=4em, align=left, start=12]
+		\itemsep0pt
+		\item Count each valid player move.
+		\item Display the current move count in real-time on the user interface.
+	\end{enumerate}
+	
+	\subsection{Bonus Feature: Top Scores Podium}
+	\begin{enumerate}[label=\textbf{FR\arabic*}, labelwidth=3em, labelsep=0.5em, leftmargin=4em, align=left, start=14]
+		\itemsep0pt
+		\item Maintain a persistent record of the top three lowest move counts achieved by players (i.e., best scores).
+		\item Display these top scores on a separate "Podium" or "High Scores" panel within the UI.
+		\item Allow the player to reset or clear the high scores via a button or menu option.
+		\item Persist high scores between sessions using local file storage.
+		\item Update the podium if a new score qualifies as one of the top three.
+	\end{enumerate}
+	
+	
+	\section{Non-Functional Requirements}
+	
+	\begin{itemize}[noitemsep]
+		\item \textbf{Performance}: The game should update the interface at a minimum of 30 FPS.
+		\item \textbf{Portability}: The game must run on both Windows and Linux environments with JavaFX.
+		\item \textbf{Usability}: UI should be intuitive, with clearly visible stones and responsive input.
+		\item \textbf{Maintainability}: Code should follow modular design principles using object-oriented patterns.
+		\item \textbf{Robustness}: The system must gracefully handle unexpected input and edge cases.
+	\end{itemize}
+	
+	\section{User Interface Overview}
+	
+	The main window should include:
+	\begin{itemize}[noitemsep]
+		\item A visual display of the overlapping 3x3 grids with colored stones.
+		\item A label showing the current move count.
+		\item Optional buttons: Reset, Quit, Undo, Redo
+	\end{itemize}
+	
+	\section{Future Enhancements (Out of Scope)}
+	
+	\begin{itemize}[noitemsep]
+		\item Add sound effects or animations.
+		\item Include difficulty levels (4x4 grids or custom shaped) or randomized starting configurations.
+		\item Save/load game state to/from disk.
+		\item Add a scoring system or timer.
+	\end{itemize}
+		
+\end{document}
